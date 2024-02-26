@@ -2,3 +2,9 @@ llama-index
 nltk
 streamlit
 openai
+google-api-python-client 
+google-auth-httplib2 
+google-auth-oauthlib
+PyDrive
+pip install llama-index-llms-openai
+install llama-index-extractors-entity
