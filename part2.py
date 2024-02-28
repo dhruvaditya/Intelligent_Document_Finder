@@ -16,6 +16,15 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 # If modifying these SCOPES, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
 
+loader = GoogleDriveReader()
+def load_data(folder_id: str):
+    docs = loader.load_data(folder_id=folder_id)
+    for doc in docs:
+        doc.id_ = doc.metadata["file_name"]
+    return docs
+
+
+docs = load_data(folder_id="1xCRk4ZdPH_OOp2fDulleilxKJEV3_ahD")
 
 def service_account_login():
     creds = None
@@ -52,7 +61,6 @@ def list_files(service, folder_id):
         q=f"'{folder_id}' in parents",
         pageSize=10, fields="nextPageToken, files(id, name)").execute()
     items = results.get('files', [])
-    loader=GoogleDriveReader()
     docs = loader.load_data(folder_id=folder_id)
     for doc in docs:
              doc.id_ = doc.metadata["file_name"]
