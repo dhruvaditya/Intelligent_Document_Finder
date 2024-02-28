@@ -2,11 +2,13 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
-# Define the scopes your application requires
+# Defined the scopes from google drive API v3 documentatin, for the accessibility of the files.
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
-
+#Reauthenticated Google drive to resolve the bug that i was facing 
+"""An error occurred while downloading file: <HttpError 403 when requesting
+ Details: "[{'message': 'The user has not granted the app 471623972493 read access to the file , 'domain': 'global', 'reason': 'appNotAuthorizedToFile', 'location': 'Authorization', 'locationType': 'header'}]">"""
 def reauthenticate():
-    # Create the flow using the client secrets file from the Google Developer Console
+    # Created the flow using the client secrets file from the Google Developer Console
     flow = InstalledAppFlow.from_client_secrets_file('client_secrets.json', SCOPES)
 
     # Run the flow to get the new credentials
@@ -21,5 +23,3 @@ def reauthenticate():
 # Call the reauthenticate function to get new credentials
 creds = reauthenticate()
 
-# Now you can use these credentials to create a service object
-# and make calls to the Google Drive API

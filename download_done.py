@@ -40,7 +40,7 @@ def print_file_content(service, file_id):
         request = service.files().get_media(fileId=file_id)
         # Use io.BytesIO buffer to store the downloaded content
         fh = io.BytesIO()
-        # Create a downloader object to download the file
+        # Created a downloader object to download the file
         downloader = MediaIoBaseDownload(fh, request)
         done = False
         while done is False:
@@ -112,8 +112,7 @@ def download_file(service, file_id, directory_name='docu'):
 
 
 service = service_account_login()
-# Assuming 'service' is an authenticated Google Drive service instance
-# and 'folder_id' is the ID of the folder you want to list files from
+#Folder id is the ID where the data is stored
 list_files(service, '1xCRk4ZdPH_OOp2fDulleilxKJEV3_ahD')
 
 # To print the content of a file, call the print_file_content function
