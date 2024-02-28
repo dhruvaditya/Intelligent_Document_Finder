@@ -3,6 +3,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
 
 # If modifying these SCOPES, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
@@ -34,16 +35,24 @@ def list_files(service, folder_id):
         q=f"'{folder_id}' in parents",
         pageSize=10, fields="nextPageToken, files(id, name)").execute()
     items = results.get('files', [])
-    if not items:
-        print('No files found.')
-    else:
-        print('Files:')
-        for item in items:
-            print(u'{0} ({1})'.format(item['name'], item['id']))
+    for item in items:
+        documents = SimpleDirectoryReader("item").load_data()
+    
+    index = VectorStoreIndex.from_documents(documents)
+    query_engine = index.as_query_engine(similarity_top_k=5)
+    response = query_engine.query("What did the author do growing up?")
+    print(response)
+    # if not items:
+    #     print('No files found.')
+    # else:
+    #     print('Files:')
+    #     for item in items:
+    #         print(u'{0} ({1})'.format(item['name'], item['id']))
 
 #adding the folder id here
 service = service_account_login()
 list_files(service, '1xCRk4ZdPH_OOp2fDulleilxKJEV3_ahD')
+# documents = SimpleDirectoryReader("items").load_data()
 
 
 

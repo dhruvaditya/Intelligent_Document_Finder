@@ -3,9 +3,21 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from googleapiclient.http import MediaIoBaseDownload
+import io
 
 # If modifying these SCOPES, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+def print_file_content(service, file_id, file_name):
+    request = service.files().get_media(fileId=file_id)
+    file_io = io.BytesIO()
+    downloader = MediaIoBaseDownload(file_io, request)
+    done = False
+    while not done:
+        _, done = downloader.next_chunk()
+    file_io.seek(0)
+    content = file_io.read().decode('utf-8')
+    print(f"Content of {file_name} ({file_id}):\n{content}\n")
 
 def service_account_login():
     creds = None
@@ -40,10 +52,16 @@ def list_files(service, folder_id):
         print('Files:')
         for item in items:
             print(u'{0} ({1})'.format(item['name'], item['id']))
+            print_file_content(service, item['id'], item['name'])
 
 #adding the folder id here
 service = service_account_login()
-list_files(service, '1xCRk4ZdPH_OOp2fDulleilxKJEV3_ahD')
+list_files(service, '1RFhr3-KmOZCR5rtp4dlOMNl3LKe1kOA5')
+
+
+
+
+
 
 
 
