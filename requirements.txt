@@ -8,3 +8,5 @@ google-auth-oauthlib
 PyDrive
 pip install llama-index-llms-openai
 install llama-index-extractors-entity
+pip install llama-index-embeddings-huggingface
+pip install llama-index-readers-google
