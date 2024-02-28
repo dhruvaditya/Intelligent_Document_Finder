@@ -6,7 +6,13 @@ google-api-python-client
 google-auth-httplib2 
 google-auth-oauthlib
 PyDrive
-pip install llama-index-llms-openai
-install llama-index-extractors-entity
-pip install llama-index-embeddings-huggingface
-pip install llama-index-readers-google
+llama-index-llms-openai
+llama-index-extractors-entity
+llama-index-embeddings-huggingface
+llama-index-readers-google
+python-dotenv
+docx2txt
+llama-index-embeddings-openai
+google-auth 
+google-auth-oauthlib 
+google-auth-httplib2
