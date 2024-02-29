@@ -2,3 +2,4 @@
 **/llm
 /__pycache__
 /llama
+/.streamlit

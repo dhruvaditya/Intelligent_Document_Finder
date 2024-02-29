@@ -1,4 +1,8 @@
-#OK Tested main file
+#OK tested with Streamlit UI
+import streamlit as st
+from llama_index.core import VectorStoreIndex, ServiceContext, Document
+from llama_index.llms.openai import OpenAI
+import openai
 import os
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -13,41 +17,56 @@ from pydrive.drive import GoogleDrive
 import chromadb
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core import StorageContext
-
-# Load the .env file
-load_dotenv()
-
-# Access the API key
-openai_api_key = os.environ.get("OPENAI_API_KEY")
+openai.api_key = os.environ["OPENAI_KEY"]
 gauth=GoogleAuth()
 drive=GoogleDrive(gauth)
 
 # Initialize GoogleDriveReader
 loader = GoogleDriveReader()
-chroma_client = chromadb.PersistentClient()
-chroma_collection = chroma_client.create_collection("quickstart")
-vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
-storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
+st.set_page_config(page_title="Intelligent Document Finder", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
+openai.api_key = st.secrets.openai_key
+st.title("Intelligent Document Finder, powered by LlamaIndex 💬🦙")
+st.info("Made with ❤ by Aditya Raj", icon="👩‍💻")
+#Initializing the chat history here
+if "messages" not in st.session_state.keys(): 
+    st.session_state.messages = [
+        {"role": "assistant", "content": "Ask me a question realted to your documents stored in Google Drive"}
+    ]
+
+@st.cache_resource(show_spinner=False)
 def load_data(folder_id: str):
-    # Load documents from the specified Google Drive folder
-    docs = loader.load_data(folder_id=folder_id)
+    with st.spinner(text="Loading and indexing the Google Drive docs – hang tight! This should take 1-2 minutes."):
+        # Load documents from the specified Google Drive folder
+        docs = loader.load_data(folder_id=folder_id)
+        #Service context method called
+        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are an expert on the Streamlit Python library and your job is to answer technical questions. Assume that all questions are related to the Streamlit Python library. Keep your answers technical and based on facts – do not hallucinate features."))
+        #indexing and Embedding is done and stored in VectorStoreIndex after loading all the data from google drive folder ID
+        index = VectorStoreIndex.from_documents(docs, service_context=service_context)
+        return index
     
-    # Create a VectorStoreIndex from the loaded documents
-    # index = VectorStoreIndex.from_documents(docs)
-    index = VectorStoreIndex.from_documents(docs, storage_context=storage_context)
-    
-    # Create a query engine from the index
-    query_engine = index.as_query_engine()
-    
-    # Perform a query against the index
-    response = query_engine.query("There is a pdf file named docu.pdf, Read that pdf and tell me the life lessons from that pdf only")
-    print(response)
-    
-    # Assign a new id_ attribute to each document based on its file name
-    
-    return docs
+#Function call with folder id passed to index all the unstructured data located to that folder ID
+index = load_data(folder_id="1BSY94ha-XX1m27vLUZBmurgrKoV7jRvp")
 
-# Load documents from the specified folder ID and print them
-docs = load_data(folder_id="1xCRk4ZdPH_OOp2fDulleilxKJEV3_ahD")
-# print(docs)
+# Initializing the chat engine
+
+if "chat_engine" not in st.session_state.keys(): 
+        st.session_state.chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
+
+# Prompt to take user input and save it in history
+if prompt := st.chat_input("Your question"): 
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+# Displaying the prior chat messages
+for message in st.session_state.messages: 
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
+
+# If last message is not from assistant, generate a new response
+if st.session_state.messages[-1]["role"] != "assistant":
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            response = st.session_state.chat_engine.chat(prompt)
+            st.write(response.response)
+            message = {"role": "assistant", "content": response.response}
+            st.session_state.messages.append(message) # Add response to message history
