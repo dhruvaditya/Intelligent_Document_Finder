@@ -1,4 +1,4 @@
-#Intelligent_Document_Finder
+# Intelligent_Document_Finder
 
 This project is a Streamlit-based chatbot that leverages the LlamaIndex library to provide a conversational interface for querying and interacting with documents indexed from Google Drive. It uses OpenAI's GPT-3.5-turbo model to generate responses and Streamlit for the web interface.
 
