@@ -9,9 +9,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from llama_index.readers.google import GoogleDriveReader
-import openai
 from dotenv import load_dotenv
-from llama_index.core import VectorStoreIndex
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 import chromadb
@@ -45,7 +43,7 @@ def load_data(folder_id: str):
     with st.spinner(text="Loading and indexing the Google drive docs docs – hang tight! This should take 1-2 minutes."):
         # Load documents from the specified Google Drive folder
         docs = loader.load_data(folder_id=folder_id)
-        #Service context method called
+        #Service context method called model gpt - 3.5 turbo is used along with system_prompt.
         service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are an advanced AI assistant with the capability to securely access and retrieve information from a specified Google Drive account. Your primary function is to provide accurate and detailed answers to queries based on the content stored within documents in the Google Drive. You have read-only access to an extensive collection of documents, spreadsheets, presentations, and other files that you can reference to extract information. Structure your response to each query as follows: Response: [Your direct answer], Source: [File Name].[File Type], Location: Page [number] or Section [name], and Author Name."))
         #Automatically indexing and Embedding is done here and stored in VectorStoreIndex after loading all the data from google drive folder ID
         index = VectorStoreIndex.from_documents(docs, service_context=service_context)
