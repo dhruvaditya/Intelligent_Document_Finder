@@ -1,6 +1,8 @@
 #Ok Tested
-
-
+#This was the initial method which i was implementing in this method firstly i created a method to download file from
+#google drive using google drive api and then the file will be stored in a directory and then simple directory reader method called to load data.
+#But after receiving feedback from Haresh bhai i have started working on fetching data directly from google drive, 
+# I have left this code here for future reference.
 import os
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
