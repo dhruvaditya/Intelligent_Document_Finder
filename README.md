@@ -2,6 +2,9 @@
 
 This project is a Streamlit-based chatbot that leverages the LlamaIndex library to provide a conversational interface for querying and interacting with documents indexed from Google Drive. It uses OpenAI's GPT-3.5-turbo model to generate responses and Streamlit for the web interface.
 
+## Video Link:
+https://drive.google.com/file/d/1uSDqyAqkr6NtKLZrsF2jj0myWOAcb5Rj/view?usp=sharing
+
 ## Installation
 Prerequisites
 Before running this project, some prerequisites need to be installed:
@@ -22,6 +25,9 @@ On Windows:
 
      
 4. Set up your environment variables by creating a `.env` file in the root directory of the project. Add your OpenAI API key to the `.env` file:
+5. Create .streamlit folder and create secrets.toml and add open ai api key [openai_key=”sk-..”]
+
+
 
 ## Usage
 
