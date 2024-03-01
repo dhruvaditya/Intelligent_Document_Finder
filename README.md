@@ -3,7 +3,7 @@
 This project is a Streamlit-based chatbot that leverages the LlamaIndex library to provide a conversational interface for querying and interacting with documents indexed from Google Drive. It uses OpenAI's GPT-3.5-turbo model to generate responses and Streamlit for the web interface.
 
 ## Video Link:
-https://drive.google.com/file/d/1uSDqyAqkr6NtKLZrsF2jj0myWOAcb5Rj/view?usp=sharing
+https://drive.google.com/drive/folders/14C93jsJmExUUByg6_X07J8BQ2w9-Np68?usp=sharing
 
 ## Installation
 Prerequisites
