@@ -38,4 +38,8 @@ streamlit run main.py
 
 ![Screenshot (54)](https://github.com/dhruvaditya/Intelligent_Document_Finder/assets/89244720/fd9fb0cb-fd37-4d7e-8d50-cada80986f68)
 
+## Flow chart
+![Google Drive (3)](https://github.com/dhruvaditya/Intelligent_Document_Finder/assets/89244720/71cb3748-4d91-476f-800b-ffde248433e8)
+
+
 
