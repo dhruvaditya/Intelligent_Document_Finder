@@ -29,8 +29,13 @@ To launch the Streamlit application, run the following command in your terminal:
 streamlit run main.py
 
 
-Real time fetching from google drive (Some snapshots of while i was testing the project).
-Prompt: There is a pdf file named docu.pdf, Read that pdf and tell me the summary of that pdf only
+# Real time data fetching from google drive embedding and indexing is done by using gpt-3.5 turbo model (Here is Some snapshots of while i was testing the project).
+## UI of Intelligent Document Finder
 
-Response: The PDF file "docu.pdf" contains feedback on a conversation titled "Coffee with Chintan." The author expresses gratitude for the opportunity to participate in the conversation and highlights the insightful knowledge gained from talking with Chintan. The feedback includes details about Chintan's life journey, feedback on gain profiles, the value of time, the company's focus areas, memorable achievements of Promact, advice on work ethic, and insights into Chintan's personal life and routines. The conversation was engaging and informative, lasting for 2 hours, with the promise of future meetings to delve into more topics.
-![Screenshot (34)](https://github.com/dhruvaditya/Intelligent_Document_Finder/assets/89244720/3ac779db-f6e4-41c2-b267-281f884a5754)
+![Screenshot (53)](https://github.com/dhruvaditya/Intelligent_Document_Finder/assets/89244720/3f2c6649-18a1-489d-994e-37c9bdc322d3)
+
+## Here is the query response on my local machine during testing:
+
+![Screenshot (54)](https://github.com/dhruvaditya/Intelligent_Document_Finder/assets/89244720/fd9fb0cb-fd37-4d7e-8d50-cada80986f68)
+
+
