@@ -6,7 +6,7 @@ This project is a Streamlit-based chatbot that leverages the LlamaIndex library 
 Prerequisites
 Before running this project, some prerequisites need to be installed:
 
-Python 3.6 or higher
+Python 3.6 or higher (i have used python==3.10.0)
 A virtual environment (recommended)
 Create a virtual environment:
 
