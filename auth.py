@@ -20,6 +20,13 @@ if st.session_state["authentication_status"]:
     st.write(f'Welcome *{st.session_state["name"]}*')
     st.title("✔ Intelligent Document Finder, powered by LlamaIndex 🏆💬🦙")
     st.info("Made with ❤ by Aditya Raj", icon="👩‍💻")
+    #Initializing the chat history here
+    if "messages" not in st.session_state.keys():
+        st.session_state.messages = [
+        {"role": "assistant", "content": "Ask me a question realted to your various types of documents stored in Google Drive"}
+    ]
+    
+
 elif st.session_state["authentication_status"] is False:
     st.error('Username/password is incorrect')
 elif st.session_state["authentication_status"] is None:

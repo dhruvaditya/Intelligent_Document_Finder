@@ -11,7 +11,6 @@ class User(Base):
     username = Column(String(255), unique=True, nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     password_hashed = Column(String(255), nullable=False)
-    user_token = Column(String(255))
 
     folders = relationship("Folder", backref="owner")
 

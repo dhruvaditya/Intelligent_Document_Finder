@@ -61,7 +61,7 @@ def load_data(folder_id: str):
         return index
     
 #Function call with folder id passed to index all the unstructured data located to that folder ID
-index = load_data(folder_id="1xCRk4ZdPH_OOp2fDulleilxKJEV3_ahD")
+index = load_data(folder_id="Replace with your folder ID")
 
 # Initializing the chat engine
 

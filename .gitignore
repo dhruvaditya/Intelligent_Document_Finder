@@ -4,3 +4,4 @@
 /llama
 /.streamlit
 /config.yaml
+/auth.py
