@@ -1,4 +1,5 @@
-#OK tested with Streamlit UI
+import uvicorn
+from fastapi import FastAPI, Body, Depends
 import streamlit as st
 from llama_index.core import VectorStoreIndex, ServiceContext, Document
 from llama_index.llms.openai import OpenAI
@@ -15,63 +16,70 @@ from pydrive.drive import GoogleDrive
 import chromadb
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core import StorageContext
+from dotenv import load_dotenv
+from llama_index.core import Document, VectorStoreIndex
+from llama_index.core.llama_pack import download_llama_pack
+
+from app.auth.model import UserSchema, UserLoginSchema
+from app.auth.auth_bearer import JWTBearer
+from app.auth.auth_handler import signJWT
+
+# Load the .env file
+load_dotenv()
 openai.api_key = os.environ["OPENAI_KEY"]
 
-#gauth is a class provided by PyDrive that handles authentication and creates a GoogleAuth object.
-#it initiates the OAuth 2.0 authentication flow, which is the process that google uses to provide authorization and authentication
-#it is fetching client_secrets.json file which is a json file downloaded from google drive console inorder to make connection with the application
 gauth=GoogleAuth()
 drive=GoogleDrive(gauth)
 
 # Initialize GoogleDriveReader
 loader = GoogleDriveReader()
 
-st.set_page_config(page_title="Intelligent Document Finder", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
-#created a .streamlit folder in the root directory and inside that folder created secrets.toml file. In that file openai_key ="sk-..." is stored
-#streamlit is fetching api key from that folder.
-openai.api_key = st.secrets.openai_key
-st.title("✔ Intelligent Document Finder, powered by LlamaIndex 🏆💬🦙")
-st.info("Made with ❤ by Aditya Raj", icon="👩‍💻")
-#Initializing the chat history here
-if "messages" not in st.session_state.keys(): 
-    st.session_state.messages = [
-        {"role": "assistant", "content": "Ask me a question realted to your various types of documents stored in Google Drive"}
-    ]
+users = []
 
-@st.cache_resource(show_spinner=False)
-def load_data(folder_id: str):
-    with st.spinner(text="Loading and indexing the Google drive docs docs – hang tight! This should take 1-2 minutes."):
-        # Load documents from the specified Google Drive folder
-        docs = loader.load_data(folder_id=folder_id)
-        #Service context method called model gpt - 3.5 turbo is used along with system_prompt.
-        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are an advanced AI assistant with the capability to securely access and retrieve information from a specified Google Drive account. Your primary function is to provide accurate and detailed answers to queries based on the content stored within documents in the Google Drive. You have read-only access to an extensive collection of documents, spreadsheets, presentations, and other files that you can reference to extract information. Structure your response to each query as follows: Response: [Your direct answer], Source: [File Name].[File Type], Location: Page [number] or Section [name], and Author Name."))
-        #Automatically indexing and Embedding is done here and stored in VectorStoreIndex after loading all the data from google drive folder ID
-        index = VectorStoreIndex.from_documents(docs, service_context=service_context)
-        return index
-    
-#Function call with folder id passed to index all the unstructured data located to that folder ID
-index = load_data(folder_id="1xCRk4ZdPH_OOp2fDulleilxKJEV3_ahD")
+app = FastAPI()
 
-# Initializing the chat engine
 
-if "chat_engine" not in st.session_state.keys(): 
-        st.session_state.chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
 
-# Prompt to take user input and save it in history
-if prompt := st.chat_input("Your question"): 
-    st.session_state.messages.append({"role": "user", "content": prompt})
+def check_user(data: UserLoginSchema):
+    for user in users:
+        if user.email == data.email and user.password == data.password:
+            return True
+    return False
+# testing
+@app.get("/", tags=["test"])
+def greet():
+    return {"hello": "world!."}
+@app.post("/folders", dependencies=[Depends(JWTBearer())], tags=["drivereader"])
+async def get_folder_by_id(folder_id: str):
+  
+  docs = loader.load_data(folder_id=folder_id)
+  service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are an advanced AI assistant with the capability to securely access and retrieve information from a specified Google Drive account. Your primary function is to provide accurate and detailed answers to queries based on the content stored within documents in the Google Drive. You have read-only access to an extensive collection of documents, spreadsheets, presentations, and other files that you can reference to extract information. Structure your response to each query as follows: Response: [Your direct answer], Source: [File Name].[File Type], Location: Page [number] or Section [name], and Author Name."))
+  index = VectorStoreIndex.from_documents(docs)
+  query_engine = index.as_query_engine()
+  response = query_engine.query("What is this pdf about?")
 
-# Displaying the prior chat messages
-for message in st.session_state.messages: 
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+  if folder_id:
+      return response
+  else:
+      return {"message": "Please provide a folder ID in the query string"}
 
-# If last message is not from assistant, generate a new response
-if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant"):
-        with st.spinner("Thinking takes some time wait..."):
-            response = st.session_state.chat_engine.chat(prompt)
-            st.write(response.response)
-            message = {"role": "assistant", "content": response.response}
-            #Append the response to the conversation log.
-            st.session_state.messages.append(message) 
+# @app.post("/askquestion", index : VectorStoreIndex, tags=["drivereader"])
+# async def ask_question(prompt: str):
+#     query_engine = index.as_query_engine()
+#     response = query_engine.query("What is this pdf about?")
+#     return response
+
+
+@app.post("/user/signup", tags=["user"])
+def create_user(user: UserSchema = Body(...)):
+    users.append(user) # will replace with db call, after hashing the password
+    return signJWT(user.email)
+
+
+@app.post("/user/login", tags=["user"])
+def user_login(user: UserLoginSchema = Body(...)):
+    if check_user(user):
+        return signJWT(user.email)
+    return {
+        "error": "Wrong login details!"
+    }
