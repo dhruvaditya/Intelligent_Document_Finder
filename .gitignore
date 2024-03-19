@@ -5,3 +5,4 @@
 /.streamlit
 /config.yaml
 /auth.py
+/azure
