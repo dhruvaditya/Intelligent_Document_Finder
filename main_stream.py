@@ -14,8 +14,6 @@ from llama_index.readers.google import GoogleDriveReader
 from dotenv import load_dotenv
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
-import chromadb
-from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core import StorageContext
 from dotenv import load_dotenv
 from llama_index.core import Document, VectorStoreIndex
