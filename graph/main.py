@@ -21,11 +21,16 @@ from fastapi import Depends
 from app.auth.model import UserSchema, UserLoginSchema
 from app.auth.auth_bearer import JWTBearer
 from app.auth.auth_handler import signJWT
-
+import msal
+from msal import PublicClientApplication
+from llama_index.readers.microsoft_onedrive import OneDriveReader
+#One drive loader by client id which is stored in env file
+client_id = os.getenv('CLIENT_ID')
+loader_one = OneDriveReader(client_id)
 # Load the .env file
 load_dotenv()
 openai.api_key = os.environ["OPENAI_KEY"]
-
+#for google drive authentication
 gauth=GoogleAuth()
 drive=GoogleDrive(gauth)
 
@@ -55,6 +60,20 @@ async def get_index(folder_id: str):
 
   if folder_id:
       return index
+  else:
+      return {"message": "Please provide a folder ID in the query string"}
+
+@app.post("/onedrive", dependencies=[Depends(JWTBearer())], tags=["One Drive Reader"])
+async def get_index(folder_id: str):
+  #loading data from One drive
+  documents = loader_one.load_data()
+  index_one = VectorStoreIndex.from_documents(documents)
+  query_engine = index_one.as_query_engine()
+  response = query_engine.query("What to improve in the PPT for SIH")
+  print(response)
+
+  if folder_id:
+      return index_one
   else:
       return {"message": "Please provide a folder ID in the query string"}
 

@@ -1,0 +1,34 @@
+cookie:
+  expiry_days: 30
+  key: some_signature_key
+  name: some_cookie_name
+credentials:
+  usernames:
+    abc:
+      email: example@gmail.com
+      logged_in: false
+      name: ABC
+      password: $2b$12$P1XBDXMcu0NKt8uH2uAjmuDPXRqOWgMkFc.mzFL8U4SsefrrV48Um
+    aditya:
+      email: aditya@gmail.com
+      logged_in: false
+      name: Aditya Raj
+      password: $2b$12$ak00JqdLdTsqoTJej.XAAOFk2ypQfhAKysG.n4MpkSqScKJPjFKLO
+    adityaraj:
+      email: adityaraj@gmail.com
+      logged_in: false
+      name: Aditya
+      password: $2b$12$XIzgBtvFidCUX2DKpjfHVOVyCzEgrVpov.AkaN13eHedDwRby2oAW
+    ayush:
+      email: ayush@gmail.com
+      logged_in: false
+      name: Ayush Kumar
+      password: $2b$12$Nb.a/uMWUBZzuKNINYqYz.MGHknGAUmgRjFNI9O9z5mIHhafHW4hG
+    test:
+      email: test@gmail.com
+      logged_in: false
+      name: testing
+      password: $2b$12$Uo5fXoxelALqXMZwrjXNtOsryzf8XkiSCWGyEp/9JJYAWzh4IKE0q
+preauthorized:
+  emails:
+  - melsby@gmail.com
