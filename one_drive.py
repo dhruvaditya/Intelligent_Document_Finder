@@ -9,8 +9,6 @@ from llama_index.core import StorageContext
 from llama_index.core import VectorStoreIndex, ServiceContext, Document
 from llama_index.llms.openai import OpenAI
 import os
-
-
 from llama_index.readers.microsoft_onedrive import OneDriveReader
 # Load the .env file
 load_dotenv()
