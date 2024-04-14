@@ -1,6 +1,5 @@
 # Intelligent_Document_Finder
 
--Please check both ways that I have implemented 1. main.py 2. main_stream.py
 - Streamlit Authentication with Streamlit Authenticator:
 
 Streamlit Authenticator offers a straightforward approach to user authentication within Streamlit applications. In this implementation, a custom database is created within the application to manage user credentials. Users can sign up for an account or log in with existing credentials. This approach provides a hands-on understanding of user interface (UI) design in Streamlit while handling user authentication and authorization.
